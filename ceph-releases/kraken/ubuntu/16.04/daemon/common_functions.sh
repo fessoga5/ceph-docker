@@ -96,6 +96,7 @@ function dev_part {
     local symdir=$(dirname ${osd_device})
     local link=""
     local pfxlen=0
+     >&2 log "INFO - desired_partition $symdir/$option == $desired_partition, symdir $symdir"
     for option in $(ls $symdir); do
     if [[ $(readlink -f $symdir/$option) == $desired_partition ]]; then
       local optprefixlen=$(prefix_length $option $bn)

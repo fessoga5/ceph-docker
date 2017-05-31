@@ -8,9 +8,9 @@ function osd_activate {
   fi
 
   CEPH_DISK_OPTIONS=""
-  DATA_UUID=$(blkid -o value -s PARTUUID ${OSD_DEVICE}1)
-  LOCKBOX_UUID=$(blkid -o value -s PARTUUID ${OSD_DEVICE}3 || true)
-  JOURNAL_PART=$(dev_part ${OSD_DEVICE} 2)
+  log "INFO - DATA_UUID = ${OSD_DEVICE}-part1"
+  DATA_UUID=$(blkid -o value -s PARTUUID ${OSD_DEVICE}-part1)
+  LOCKBOX_UUID=$(blkid -o value -s PARTUUID ${OSD_DEVICE}-part3 || true)
   ACTUAL_OSD_DEVICE=$(readlink -f ${OSD_DEVICE}) # resolve /dev/disk/by-* names
 
   # watch the udev event queue, and exit if all current events are handled
@@ -20,12 +20,9 @@ function osd_activate {
   if [[ -n "${OSD_JOURNAL}" ]]; then
     wait_for_file ${OSD_DEVICE}
     chown ceph. ${OSD_JOURNAL}
-  else
-    wait_for_file $(dev_part ${OSD_DEVICE} 1)
-    chown ceph. $JOURNAL_PART
   fi
 
-  DATA_PART=$(dev_part ${OSD_DEVICE} 1)
+  DATA_PART=$(dev_part ${OSD_DEVICE} "")
   MOUNTED_PART=${DATA_PART}
 
   if [[ ${OSD_DMCRYPT} -eq 1 ]]; then
