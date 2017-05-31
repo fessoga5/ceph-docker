@@ -22,7 +22,7 @@ function osd_activate {
     chown ceph. ${OSD_JOURNAL}
   fi
 
-  DATA_PART=$(dev_part ${OSD_DEVICE} "")
+  DATA_PART=$(dev_part ${OSD_DEVICE} "-part1")
   MOUNTED_PART=${DATA_PART}
 
   if [[ ${OSD_DMCRYPT} -eq 1 ]]; then
